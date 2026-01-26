@@ -34,7 +34,7 @@
 > [!TIP]
 > MaaFramework 有丰富的 [开发工具](https://github.com/MaaXYZ/MaaFramework/tree/main?tab=readme-ov-file#%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7) 可以进行低代码编辑、调试等，请善加使用。
 
-7. `resource` 等文件夹是链接状态，修改 `install` 等同于修改 `assets` 中的内容，无需额外复制。  
+6. `resource` 等文件夹是链接状态，修改 `install` 等同于修改 `assets` 中的内容，无需额外复制。  
    **但 `interface.json` 是复制的，若有修改需手动复制回 `assets` 再进行提交。**
 
 ## 代码规范
