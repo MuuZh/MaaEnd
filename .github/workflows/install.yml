@@ -185,6 +185,16 @@ jobs:
 
           cat install/interface.json
 
+      - name: Update mirrorchyan_rid for macOS
+        if: matrix.os == 'macos'
+        shell: bash
+        run: |
+          # 更新 interface.json 中的 mirrorchyan_rid 为 MaaEnd_exec
+          jq --indent 4 '.mirrorchyan_rid = "MaaEnd_exec"' install/interface.json > install/interface.json.tmp
+          mv install/interface.json.tmp install/interface.json
+          echo "Updated mirrorchyan_rid to MaaEnd_exec"
+          cat install/interface.json
+
       - uses: actions/upload-artifact@v4
         with:
           name: MaaEnd-${{ matrix.os }}-${{ matrix.arch }}
