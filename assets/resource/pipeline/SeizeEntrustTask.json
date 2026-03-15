@@ -90,8 +90,9 @@
                     "SeizeEntrustTask/7.98wMoney_en.png"
                 ],
                 "threshold": [
-                    0.94
-                ]
+                    0.91
+                ],
+                "order_by": "Score"
             }
         },
         "pre_wait_freezes": 100,
@@ -112,8 +113,9 @@
                     "SeizeEntrustTask/7.98wMoney.png"
                 ],
                 "threshold": [
-                    0.94
-                ]
+                    0.91
+                ],
+                "order_by": "Score"
             }
         },
         "timeout": 3000,
