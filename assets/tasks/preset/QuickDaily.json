@@ -8,7 +8,7 @@
                 {
                     "name": "VisitFriends",
                     "option": {
-                        "ProductionAssistType": "ProductionAssistOnlyGrowthChamber"
+                        "ProductionAssistType": "ProductionAssistAll"
                     }
                 },
                 {
