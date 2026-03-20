@@ -116,8 +116,17 @@
         "action": {
             "type": "Click"
         },
-        "post_wait_freezes": 10,
+        "post_wait_freezes": {
+            "time": 1000,
+            "target": [
+                -280,
+                -140,
+                280,
+                140
+            ]
+        },
         "next": [
+            "[JumpBack]SceneNoticeRewardsConfirm",
             "WeaponUpgradeWeaponFinished",
             "[JumpBack]SceneAnyEnterWorld"
         ]
