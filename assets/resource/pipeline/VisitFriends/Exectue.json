@@ -195,37 +195,32 @@
         "recognition": "And",
         "all_of": [
             {
-                "sub_name": "icon",
-                "recognition": "TemplateMatch",
+                "sub_name": "text",
+                "recognition": "OCR",
                 "roi": [
-                    410,
-                    400,
-                    200,
-                    200
+                    80,
+                    360,
+                    420,
+                    110
                 ],
-                "template": "VisitFriends/TerminalReceptionRoom.png",
-                "threshold": 0.9
+                "expected": [
+                    "情报交流",
+                    "情報交流",
+                    "Clue Exchange",
+                    "共有可能"
+                ]
             },
             {
                 "recognition": "OCR",
-                "roi": "icon",
+                "roi": "text",
                 "roi_offset": [
-                    0,
+                    -20,
                     0,
                     200,
-                    200
+                    0
                 ],
                 "expected": [
-                    // "无法参与交流",
-                    // "無法參與交流",
-                    // "共有会参加不可",
-                    // "교류에 참여할 수 없습니다",
-                    // "Cannot join this exchange"
-                    "无法",
-                    "無法",
-                    "不可",
-                    "교류에",
-                    "Cannot"
+                    "0"
                 ]
             }
         ],
