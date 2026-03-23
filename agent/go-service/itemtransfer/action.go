@@ -147,6 +147,13 @@ func detectAllItems(ctx *maa.Context, img image.Image, nndNode string) []gridIte
 			continue
 		}
 		box := nnd.Box
+		if len(items) == 0 {
+			log.Debug().
+				Str("component", componentName).
+				Int("box_w", box.Width()).
+				Int("box_h", box.Height()).
+				Msg("NND detection box size (first item)")
+		}
 		items = append(items, gridItem{
 			Box:     [4]int{box.X(), box.Y(), box.Width(), box.Height()},
 			ClassID: nnd.ClsIndex,

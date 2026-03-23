@@ -110,7 +110,7 @@ func (a *ItemTransferOCRAction) Run(ctx *maa.Context, arg *maa.CustomActionArg) 
 	}
 
 	if len(items) > 0 {
-		items = buildFullGrid(items, cols)
+		items = buildFullGrid(items, cols, side)
 		log.Info().
 			Str("component", componentName).
 			Int("grid_count", len(items)).
@@ -139,6 +139,12 @@ const (
 	repoCols        = 8
 	bagCols         = 5
 
+	// NND detection ROI left/top boundaries from the pipeline (1280x720)
+	repoROIX = 158
+	repoROIY = 203
+	bagROIX  = 768
+	bagROIY  = 209
+
 	repoGridStartX = 191
 	repoGridStartY = 246
 	repoMaxRows    = 4
@@ -148,12 +154,18 @@ const (
 )
 
 // buildFullGrid reconstructs a complete grid from NND detections.
-// NND items provide the coordinate framework; the grid is then filled to
-// exactly `cols` columns per row. Rows are determined by clustering Y values
-// (items within gridCellSpacing/2 of each other belong to the same row).
-func buildFullGrid(items []gridItem, cols int) []gridItem {
+// It uses a detected item as anchor, walks left toward the pipeline ROI
+// boundary to find the grid origin, then verifies that the rightmost
+// detected item is also covered. The result is exactly `cols` columns
+// per detected row.
+func buildFullGrid(items []gridItem, cols int, side string) []gridItem {
 	if len(items) == 0 {
 		return items
+	}
+
+	roiX := repoROIX
+	if side == "bag" {
+		roiX = bagROIX
 	}
 
 	sort.Slice(items, func(i, j int) bool {
@@ -181,23 +193,31 @@ func buildFullGrid(items []gridItem, cols int) []gridItem {
 		rowYs[i] = r.y / r.count
 	}
 
-	minX := items[0].CenterX
+	minDetectedX := items[0].CenterX
+	maxDetectedX := items[0].CenterX
 	for _, it := range items[1:] {
-		if it.CenterX < minX {
-			minX = it.CenterX
+		if it.CenterX < minDetectedX {
+			minDetectedX = it.CenterX
+		}
+		if it.CenterX > maxDetectedX {
+			maxDetectedX = it.CenterX
 		}
 	}
 
-	colXs := make([]int, cols)
-	for c := 0; c < cols; c++ {
-		colXs[c] = minX + c*gridCellSpacing
+	startX := minDetectedX
+	for startX-gridCellSpacing >= roiX {
+		startX -= gridCellSpacing
+	}
+
+	if endX := startX + (cols-1)*gridCellSpacing; endX < maxDetectedX {
+		startX = maxDetectedX - (cols-1)*gridCellSpacing
 	}
 
 	grid := make([]gridItem, 0, len(rowYs)*cols)
 	for _, y := range rowYs {
-		for _, x := range colXs {
+		for c := 0; c < cols; c++ {
 			grid = append(grid, gridItem{
-				CenterX: x,
+				CenterX: startX + c*gridCellSpacing,
 				CenterY: y,
 				ClassID: ^uint64(0),
 			})
@@ -208,7 +228,7 @@ func buildFullGrid(items []gridItem, cols int) []gridItem {
 		Str("component", componentName).
 		Int("rows", len(rowYs)).
 		Int("cols", cols).
-		Int("min_x", minX).
+		Int("start_x", startX).
 		Ints("row_ys", rowYs).
 		Msg("grid reconstructed from NND detections")
 
