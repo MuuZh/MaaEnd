@@ -73,10 +73,20 @@
                     110
                 ],
                 "expected": [
+                    "导入",
+                    "匯入",
+                    "(?i)Import",
+                    "インポート",
                     "导入蓝图",
                     "匯入藍圖",
-                    "Import Blueprint",
-                    "Import"
+                    "Import Blueprint"
+                ]
+            ,
+                "roi_offset": [
+                    0,
+                    0,
+                    167,
+                    0
                 ]
             }
         },
